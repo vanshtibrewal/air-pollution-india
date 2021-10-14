@@ -1,0 +1,32 @@
+library("dplyr")
+library("MASS")
+library("lme4")
+library("glmmTMB")
+library("gamm4")
+
+# Main
+#mode.nb.random.off.main = glmer.nb(Deaths ~ mean_pm25 + factor(q_popdensity)
+#                                    + scale(poverty) + scale(log(medianhousevalue))
+#                                    + scale(log(medhouseholdincome)) + scale(pct_owner_occ) 
+#                                    + scale(education) + scale(pct_blk) + scale(hispanic)
+#                                    + scale(older_pecent) + scale(prime_pecent) + scale(mid_pecent) 
+#                                    + scale(date_since_social[]) + scale(date_since[])
+#                                    + scale(beds/population) 
+#                                    + scale(obese) + scale(smoke)
+#                                    + scale(mean_summer_temp) + scale(mean_winter_temp) + scale(mean_summer_rm) + scale(mean_winter_rm)
+#                                    + (1|state)
+#                                    + offset(log(population)), data = aggregate_pm_census_cdc_test_beds, verbose = TRUE)
+
+mode.nb.random.off.main = glmer.nb(total_deaths ~ mean_pollution + log(pc11_pop_dens)
+                                   + scale(pc11_pca_lit_share)
+                                   + scale(schedulecaste) + scale(scheduletribe)
+                                   + scale(dum_65p)
+                                   + scale(hospitalbeds) 
+                                   + (1|pc11_state_id)
+                                   + offset(log(pc11_pca_tot_p)), data = dd, verbose = TRUE)
+
+print(summary(mode.nb.random.off.main))
+exp(summary(mode.nb.random.off.main)[10]$coefficients[2,1])
+exp(summary(mode.nb.random.off.main)[10]$coefficients[2,1] - 1.96*summary(mode.nb.random.off.main)[10]$coefficients[2,2])
+exp(summary(mode.nb.random.off.main)[10]$coefficients[2,1] + 1.96*summary(mode.nb.random.off.main)[10]$coefficients[2,2])
+summary(mode.nb.random.off.main)[10]$coefficients[2,4]
